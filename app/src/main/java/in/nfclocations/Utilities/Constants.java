@@ -1,4 +1,4 @@
-package in.nfclocations;
+package in.nfclocations.Utilities;
 
 /**
  * Created by Brekkishhh on 24-08-2016.

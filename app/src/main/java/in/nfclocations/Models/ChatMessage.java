@@ -1,4 +1,4 @@
-package in.nfclocations;
+package in.nfclocations.Models;
 
 import java.io.Serializable;
 

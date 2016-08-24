@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.nfclocations.ChatMessage;
+import in.nfclocations.Models.ChatMessage;
 
 /**
  * Created by Brekkishhh on 23-08-2016.
@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         List<ChatMessage> chatList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String [] projection = {DbSchema.Schema._ID, DbSchema.Schema.COLUMN_MESSAGE_TEXT, DbSchema.Schema.COLUMN_TIME_STAMP,DbSchema.Schema.COLUMN_IS_SENDED};
+        String [] projection = {DbSchema.Schema.COLUMN_MESSAGE_TEXT, DbSchema.Schema.COLUMN_TIME_STAMP,DbSchema.Schema.COLUMN_IS_SENDED};
 
         Cursor readCursor = db.query(DbSchema.Schema.TABLE_NAME,projection,null,null,null,null,null);
 

@@ -1,4 +1,4 @@
-package in.nfclocations;
+package in.nfclocations.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
+
+import in.nfclocations.Models.ChatMessage;
+import in.nfclocations.Utilities.Constants;
+import in.nfclocations.R;
 
 /**
  * Created by Brekkishhh on 24-08-2016.
@@ -16,6 +21,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<ChatMessage> messages;
 
     public ChatAdapter(List<ChatMessage> messages) {
+        Collections.reverse(messages);
         this.messages = messages;
     }
 
@@ -85,13 +91,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public void addMessage(ChatMessage message){
+        Collections.reverse(messages);
         messages.add(message);
+        Collections.reverse(messages);
         this.notifyDataSetChanged();
     }
 
     public void changeChatList(List<ChatMessage> messages){
+        Collections.reverse(messages);
         this.messages  = messages;
         this.notifyDataSetChanged();
+    }
+
+    public int getChatListSize(){
+        return this.messages.size();
     }
 
 }

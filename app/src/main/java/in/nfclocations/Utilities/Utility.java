@@ -1,4 +1,4 @@
-package in.nfclocations;
+package in.nfclocations.Utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
