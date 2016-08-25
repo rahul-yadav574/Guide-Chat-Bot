@@ -8,6 +8,7 @@
     android:layout_marginTop="5dp"
     android:weightSum="1"
     android:background="@drawable/bubble1"
+    android:layout_marginLeft="10dp"
     android:padding="10dp">
 
     <TextView

@@ -19,7 +19,6 @@ public class SendMessage {
     private OkHttpClient httpClient;
 
     public SendMessage() {
-
         this.httpClient =  new OkHttpClient();
     }
 

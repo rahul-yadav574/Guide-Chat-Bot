@@ -1,10 +1,13 @@
 package in.nfclocations.Adapter;
 
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -35,6 +38,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             TextView messageTextView = ((SendChatViewHolder) holder).messageTextView;
             ImageView messageImageView = ((SendChatViewHolder) holder).messageImageView;
             VideoView messageVideoView = ((SendChatViewHolder) holder).messageVideoView;
+            MediaController mediaController = new MediaController(((SendChatViewHolder) holder).messageVideoView.getContext());
+            mediaController.setAnchorView(messageVideoView);
+            mediaController.setMediaPlayer(messageVideoView);
+            messageVideoView.setMediaController(mediaController);
             messageTextView.setVisibility(View.GONE);
             messageVideoView.setVisibility(View.GONE);
             messageImageView.setVisibility(View.GONE);
@@ -51,16 +58,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.VISIBLE);
                 messageVideoView.setVisibility(View.GONE);
-
-
             }
 
             else if ( messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_VIDEO)){
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.GONE);
                 messageVideoView.setVisibility(View.VISIBLE);
-
-
+                messageVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
+                messageVideoView.start();
             }
 
         }else if (holder instanceof ReceivedChatViewHolder){
@@ -68,9 +73,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             TextView messageTextView = ((ReceivedChatViewHolder) holder).messageTextView;
             ImageView messageImageView = ((ReceivedChatViewHolder) holder).messageImageView;
             VideoView messageVideoView = ((ReceivedChatViewHolder) holder).messageVideoView;
+            MediaController mediaController = new MediaController(((ReceivedChatViewHolder) holder).messageVideoView.getContext());
+            mediaController.setAnchorView(messageVideoView);
+            mediaController.setMediaPlayer(messageVideoView);
+            messageVideoView.setMediaController(mediaController);
             messageVideoView.setVisibility(View.GONE);
             messageImageView.setVisibility(View.GONE);
             messageTextView.setVisibility(View.GONE);
+            mediaController.setVisibility(View.VISIBLE);
 
             if (messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_TEXT)){
                 messageTextView.setVisibility(View.VISIBLE);
@@ -84,16 +94,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.VISIBLE);
                 messageVideoView.setVisibility(View.GONE);
-
-
             }
 
             else if ( messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_VIDEO)){
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.GONE);
                 messageVideoView.setVisibility(View.VISIBLE);
-
-
+                messageVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
+                messageVideoView.start();
             }
         }
     }
@@ -139,6 +147,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageTextView = (TextView) itemView.findViewById(R.id.sendMessageTextView);
             messageImageView = (ImageView) itemView.findViewById(R.id.sendMessageImageView);
             messageVideoView = (VideoView) itemView.findViewById(R.id.sendMessageVideoView);
+
         }
     }
 
@@ -147,6 +156,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView messageTextView;
         private ImageView messageImageView;
         private VideoView messageVideoView;
+
 
         public ReceivedChatViewHolder(View itemView) {
             super(itemView);

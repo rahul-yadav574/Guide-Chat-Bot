@@ -9,44 +9,46 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-
-
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/chatbg"
         tools:context=".Activity.MainActivity">
 
         <include android:id="@+id/toolbar"
             layout="@layout/toolbar_material"/>
 
-
         <android.support.v7.widget.RecyclerView
-
+            android:layout_marginBottom="8dp"
             android:layout_below="@+id/toolbar"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/form"
             android:id="@+id/chatMessagesRecyclerView"/>
 
         <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:background="#91f1f1f1"
+            android:background="@drawable/round_corners_button"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:orientation="horizontal">
 
-
             <EditText
+
                 android:layout_marginLeft="10dp"
                 android:id="@+id/messageEditText"
                 android:layout_width="252dp"
-                android:layout_height="wrap_content"
+                android:hint="@string/type_message"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/sendMessageButton"
@@ -72,6 +74,7 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:visibility="visible"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_new"
         app:menu="@menu/activity_new_drawer" />
