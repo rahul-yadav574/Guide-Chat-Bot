@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Brekkishhh on 11-08-2016.
@@ -51,5 +53,13 @@ public class Utility {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static String getCurrentTime(){
+        Calendar calendar  = Calendar.getInstance();
+        Date date = calendar.getTime();
+        Log.d(TAG,date.toString());
+        return date.toString();
+
     }
 }

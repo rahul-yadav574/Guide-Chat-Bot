@@ -17,6 +17,7 @@ public class DbSchema {
         public static final String COLUMN_MESSAGE_TEXT = "message_text";
         public static final String COLUMN_IS_SENDED = "is_sended";
         public static final String COLUMN_TIME_STAMP = "time_stamp";
+        public static final String COLUMN_MESSAGE_TYPE = "type_message";
 
     }
 }

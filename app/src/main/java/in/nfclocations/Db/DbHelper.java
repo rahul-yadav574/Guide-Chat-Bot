@@ -40,6 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
         entries.put(DbSchema.Schema.COLUMN_MESSAGE_TEXT,message.getMessage());
         entries.put(DbSchema.Schema.COLUMN_IS_SENDED,message.isSended());
         entries.put(DbSchema.Schema.COLUMN_TIME_STAMP,message.getTime());
+        entries.put(DbSchema.Schema.COLUMN_MESSAGE_TYPE,message.getTypeOfMessage());
 
         db.insert(DbSchema.Schema.TABLE_NAME,null,entries);
     }
@@ -48,7 +49,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         List<ChatMessage> chatList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String [] projection = {DbSchema.Schema.COLUMN_MESSAGE_TEXT, DbSchema.Schema.COLUMN_TIME_STAMP,DbSchema.Schema.COLUMN_IS_SENDED};
+        String [] projection = {DbSchema.Schema.COLUMN_MESSAGE_TEXT, DbSchema.Schema.COLUMN_TIME_STAMP,DbSchema.Schema.COLUMN_IS_SENDED,DbSchema.Schema.COLUMN_MESSAGE_TYPE};
 
         Cursor readCursor = db.query(DbSchema.Schema.TABLE_NAME,projection,null,null,null,null,null);
 
@@ -60,16 +61,13 @@ public class DbHelper extends SQLiteOpenHelper {
             String messageText = readCursor.getString(readCursor.getColumnIndexOrThrow(DbSchema.Schema.COLUMN_MESSAGE_TEXT));
             String isSender = readCursor.getString(readCursor.getColumnIndexOrThrow(DbSchema.Schema.COLUMN_IS_SENDED));
             String timeStamp = readCursor.getString(readCursor.getColumnIndexOrThrow(DbSchema.Schema.COLUMN_TIME_STAMP));
+            String messageType = readCursor.getString(readCursor.getColumnIndexOrThrow(DbSchema.Schema.COLUMN_MESSAGE_TYPE));
 
-
-            chatList.add(new ChatMessage(messageText,timeStamp,isSender));
+            chatList.add(new ChatMessage(messageText,timeStamp,isSender,messageType));
             readCursor.moveToNext();
         }
 
         readCursor.close();
-
         return chatList;
-
-
     }
 }
