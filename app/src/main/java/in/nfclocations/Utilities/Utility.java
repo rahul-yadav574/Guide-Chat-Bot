@@ -62,4 +62,9 @@ public class Utility {
         return date.toString();
 
     }
+
+    public static String getIframeUrl(String videoUrl){
+
+        return "<html><body><iframe width=\"280\" height=\"280\" src="+ videoUrl +" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+    }
 }

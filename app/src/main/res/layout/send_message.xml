@@ -44,7 +44,7 @@
             android:textColor="@android:color/black"
             android:src="@drawable/ic_profile"/>
 
-        <VideoView
+        <WebView
             android:visibility="gone"
             android:padding="20dp"
             android:layout_gravity="center"

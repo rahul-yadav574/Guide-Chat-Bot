@@ -6,6 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import java.util.List;
 import in.nfclocations.Models.ChatMessage;
 import in.nfclocations.R;
 import in.nfclocations.Utilities.Constants;
+import in.nfclocations.Utilities.Utility;
 
 /**
  * Created by Brekkishhh on 24-08-2016.
@@ -37,14 +41,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             TextView messageTextView = ((SendChatViewHolder) holder).messageTextView;
             ImageView messageImageView = ((SendChatViewHolder) holder).messageImageView;
-            VideoView messageVideoView = ((SendChatViewHolder) holder).messageVideoView;
-            MediaController mediaController = new MediaController(((SendChatViewHolder) holder).messageVideoView.getContext());
-            mediaController.setAnchorView(messageVideoView);
-            mediaController.setMediaPlayer(messageVideoView);
-            messageVideoView.setMediaController(mediaController);
+            WebView messageVideoView = ((SendChatViewHolder) holder).messageVideoView;
+
             messageTextView.setVisibility(View.GONE);
             messageVideoView.setVisibility(View.GONE);
             messageImageView.setVisibility(View.GONE);
+
+            messageVideoView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    return false;
+                }
+            });
+
+            WebSettings webSettings = messageVideoView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+
 
 
             if (messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_TEXT)){
@@ -64,23 +76,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.GONE);
                 messageVideoView.setVisibility(View.VISIBLE);
-                messageVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
-                messageVideoView.start();
+                messageVideoView.loadData(Utility.getIframeUrl("https://www.youtube.com/embed/vsFqdPYzsjo"), "text/html", "utf-8");
             }
 
         }else if (holder instanceof ReceivedChatViewHolder){
 
             TextView messageTextView = ((ReceivedChatViewHolder) holder).messageTextView;
             ImageView messageImageView = ((ReceivedChatViewHolder) holder).messageImageView;
-            VideoView messageVideoView = ((ReceivedChatViewHolder) holder).messageVideoView;
-            MediaController mediaController = new MediaController(((ReceivedChatViewHolder) holder).messageVideoView.getContext());
-            mediaController.setAnchorView(messageVideoView);
-            mediaController.setMediaPlayer(messageVideoView);
-            messageVideoView.setMediaController(mediaController);
+            WebView messageVideoView = ((ReceivedChatViewHolder) holder).messageVideoView;
             messageVideoView.setVisibility(View.GONE);
             messageImageView.setVisibility(View.GONE);
             messageTextView.setVisibility(View.GONE);
-            mediaController.setVisibility(View.VISIBLE);
+
+            messageVideoView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    return false;
+                }
+            });
+
+            WebSettings webSettings = messageVideoView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
 
             if (messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_TEXT)){
                 messageTextView.setVisibility(View.VISIBLE);
@@ -100,8 +116,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.GONE);
                 messageVideoView.setVisibility(View.VISIBLE);
-                messageVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
-                messageVideoView.start();
+                messageVideoView.loadData(Utility.getIframeUrl("https://www.youtube.com/embed/vsFqdPYzsjo"), "text/html", "utf-8");
             }
         }
     }
@@ -138,7 +153,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private TextView messageTextView;
         private ImageView messageImageView;
-        private VideoView messageVideoView;
+        private WebView messageVideoView;
 
 
         public SendChatViewHolder(View itemView) {
@@ -146,7 +161,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             messageTextView = (TextView) itemView.findViewById(R.id.sendMessageTextView);
             messageImageView = (ImageView) itemView.findViewById(R.id.sendMessageImageView);
-            messageVideoView = (VideoView) itemView.findViewById(R.id.sendMessageVideoView);
+            messageVideoView = (WebView) itemView.findViewById(R.id.sendMessageVideoView);
 
         }
     }
@@ -155,7 +170,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private TextView messageTextView;
         private ImageView messageImageView;
-        private VideoView messageVideoView;
+        private WebView messageVideoView;
 
 
         public ReceivedChatViewHolder(View itemView) {
@@ -163,7 +178,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             messageTextView = (TextView) itemView.findViewById(R.id.receivedMessageTextView);
             messageImageView = (ImageView) itemView.findViewById(R.id.receivedMessageImageView);
-            messageVideoView = (VideoView) itemView.findViewById(R.id.receivedMessageVideoView);
+            messageVideoView = (WebView) itemView.findViewById(R.id.receivedMessageVideoView);
         }
     }
 

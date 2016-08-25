@@ -13,4 +13,5 @@ public class Constants {
     public static final String TYPE_MESSAGE_TEXT  = "text_message";
     public static final String TYPE_MESSAGE_IMAGE = "image_message";
     public static final String TYPE_MESSAGE_VIDEO  = "video_message";
+
 }
