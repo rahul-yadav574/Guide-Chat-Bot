@@ -1,5 +1,7 @@
 package in.nfclocations.Adapter;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,13 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,11 +36,25 @@ import in.nfclocations.Utilities.Utility;
  */
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<ChatMessage> messages;
+    private List<ChatMessage> messages;
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
+    private Context context;
 
-    public ChatAdapter(List<ChatMessage> messages) {
+    public ChatAdapter(Context context,List<ChatMessage> messages) {
         Collections.reverse(messages);
         this.messages = messages;
+        this.context = context;
+        this.imageLoader = ImageLoader.getInstance();
+        this.options = new DisplayImageOptions.Builder()
+                .showImageOnFail(android.R.drawable.alert_dark_frame)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+
+        initImageLoader(context);
     }
 
     @Override
@@ -70,13 +93,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.VISIBLE);
                 messageVideoView.setVisibility(View.GONE);
+
+                imageLoader.displayImage(messages.get(position).getMessage(),messageImageView, options);
+
+
             }
 
             else if ( messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_VIDEO)){
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.GONE);
                 messageVideoView.setVisibility(View.VISIBLE);
-                messageVideoView.loadData(Utility.getIframeUrl("https://www.youtube.com/embed/vsFqdPYzsjo"), "text/html", "utf-8");
+                messageVideoView.loadData(Utility.getIframeUrl("https://www.youtube.com/embed/"+messages.get(position).getMessage()), "text/html", "utf-8");
             }
 
         }else if (holder instanceof ReceivedChatViewHolder){
@@ -110,13 +137,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.VISIBLE);
                 messageVideoView.setVisibility(View.GONE);
+
+
+                imageLoader.displayImage(messages.get(position).getMessage(),messageImageView, options);
             }
 
             else if ( messages.get(position).getTypeOfMessage().equals(Constants.TYPE_MESSAGE_VIDEO)){
                 messageTextView.setVisibility(View.GONE);
                 messageImageView.setVisibility(View.GONE);
                 messageVideoView.setVisibility(View.VISIBLE);
-                messageVideoView.loadData(Utility.getIframeUrl("https://www.youtube.com/embed/vsFqdPYzsjo"), "text/html", "utf-8");
+                messageVideoView.loadData(Utility.getIframeUrl("https://www.youtube.com/embed/"+messages.get(position).getMessage()), "text/html", "utf-8");
             }
         }
     }
@@ -198,6 +228,40 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public int getChatListSize(){
         return this.messages.size();
+    }
+
+    public void initImageLoader(Context context){
+
+        File cacheDir;
+        ImageLoaderConfiguration config;
+        DisplayImageOptions options;
+
+
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory(),"JunkFolder");}
+        else{
+            cacheDir=context.getCacheDir();}
+        if(!cacheDir.exists()){
+            cacheDir.mkdirs();}
+
+        options = new DisplayImageOptions.Builder()
+                .showImageOnFail(R.drawable.abc_textfield_activated_mtrl_alpha)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+
+        config = new ImageLoaderConfiguration.Builder(context)
+                .memoryCache(new WeakMemoryCache())
+                .denyCacheImageMultipleSizesInMemory()
+                .threadPoolSize(5)
+                .defaultDisplayImageOptions(options)
+                .build();
+
+        imageLoader.init(config);
     }
 
 }

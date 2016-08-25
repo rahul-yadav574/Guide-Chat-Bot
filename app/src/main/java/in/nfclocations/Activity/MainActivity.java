@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements MessageReceived{
         dbHelper = new DbHelper(MainActivity.this);
         linearLayoutManager.setReverseLayout(true);
 
-        chatAdapter = new ChatAdapter(dbHelper.getCompleteChat());
+        chatAdapter = new ChatAdapter(MainActivity.this,dbHelper.getCompleteChat());
         messagesRecyclerView.setLayoutManager(linearLayoutManager);
         messagesRecyclerView.setAdapter(chatAdapter);
         sendMessage = new SendMessage();

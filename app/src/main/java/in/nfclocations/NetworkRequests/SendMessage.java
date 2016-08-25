@@ -1,5 +1,10 @@
 package in.nfclocations.NetworkRequests;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import in.nfclocations.Callbacks.MessageReceived;
 import in.nfclocations.Models.ChatMessage;
@@ -17,15 +22,16 @@ import okhttp3.Response;
 public class SendMessage {
 
     private OkHttpClient httpClient;
+    private static final String TAG = "SendMessage";
 
     public SendMessage() {
         this.httpClient =  new OkHttpClient();
     }
 
-    public void sendMessageToBot(String messageBody,final MessageReceived messageReceived){
+    public void sendMessageToBot(final String messageBody, final MessageReceived messageReceived){
 
         Request request = new Request.Builder()
-                .url("http://www.google.com")
+                .url("http://drivesmart.herokuapp.com/guidebot?q="+messageBody.substring(1))
                 .get()
                 .build();
 
@@ -37,7 +43,32 @@ public class SendMessage {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                messageReceived.onMessageReceived(new ChatMessage(response.body().string(), Utility.getCurrentTime(),Constants.IS_RECEIVED,Constants.TYPE_MESSAGE_TEXT));
+
+                String responseString = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(responseString);
+                    if (jsonObject.has("status")){
+
+                        String data = jsonObject.getString("data");
+
+                        if (jsonObject.getBoolean("status")){
+                            String type = jsonObject.getString("type");
+                            messageReceived.onMessageReceived(new ChatMessage(data,Utility.getCurrentTime(),Constants.IS_RECEIVED,type));
+                        }
+                        else
+                        {
+                            messageReceived.onMessageReceived(new ChatMessage(data, Utility.getCurrentTime(),Constants.IS_RECEIVED,Constants.TYPE_MESSAGE_TEXT));
+                        }
+                    }
+
+                    else {
+                        messageReceived.onMessageReceived(new ChatMessage("Check Internet Connection",Utility.getCurrentTime(),Constants.IS_RECEIVED,Constants.TYPE_MESSAGE_TEXT));
+                    }
+                }catch (JSONException e){
+                    messageReceived.onMessageReceived(new ChatMessage("Problem Contacting With Bot Servers",Utility.getCurrentTime(),Constants.IS_RECEIVED,Constants.TYPE_MESSAGE_TEXT));
+                    Log.e(TAG,e.getMessage());
+                }
+
             }
         });
 
