@@ -71,7 +71,6 @@ public class SendMessage {
                     messageReceived.onMessageReceived(new ChatMessage("Problem Contacting With Bot Servers",Utility.getCurrentTime(),Constants.IS_RECEIVED,Constants.TYPE_MESSAGE_TEXT));
                     Log.e(TAG,e.getMessage());
                 }
-
             }
         });
 
@@ -89,7 +88,7 @@ public class SendMessage {
             ex.printStackTrace();
         }
 
-        RequestBody requestBody = RequestBody.create(Constants.TYPE_JSON,base64Image);
+        RequestBody requestBody = RequestBody.create(Constants.TYPE_JSON,jsonObject.toString());
 
         Request request = new Request.Builder()
                 .url("http://drivesmart.herokuapp.com/guidebot")
@@ -106,7 +105,7 @@ public class SendMessage {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String responseString = response.body().string();
-
+                Log.d(TAG,responseString);
                 try {
                     JSONObject jsonObject = new JSONObject(responseString);
                     if (jsonObject.has("status")){

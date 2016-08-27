@@ -31,16 +31,17 @@
 
 
         <ImageView
+            android:minWidth="500dp"
             android:padding="5dp"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:visibility="gone"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:id="@+id/sendMessageImageView"
             android:textColor="@android:color/black"
             android:src="@drawable/ic_profile"/>
@@ -48,10 +49,11 @@
         <WebView
             android:visibility="gone"
             android:padding="5dp"
+            android:minWidth="500dp"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"
             android:layout_width="match_parent"
             android:layout_height="200dp"
