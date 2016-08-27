@@ -5,7 +5,7 @@
 #TODO :
 
 -Random images and video generation from the rest API.
--To fix the size issue of the image and video player in chat screen
+-~~To fix the size issue of the image and video player in chat screen~~
 
 #New features to be implemented :
 
