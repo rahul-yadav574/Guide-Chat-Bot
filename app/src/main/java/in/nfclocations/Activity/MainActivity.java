@@ -1,7 +1,12 @@
 package in.nfclocations.Activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,17 +18,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import java.util.List;
+import java.io.IOException;
 
 import in.nfclocations.Adapter.ChatAdapter;
 import in.nfclocations.Callbacks.MessageReceived;
+import in.nfclocations.Db.DbHelper;
 import in.nfclocations.Models.ChatMessage;
 import in.nfclocations.NetworkRequests.SendMessage;
-import in.nfclocations.Utilities.Constants;
-import in.nfclocations.Db.DbHelper;
 import in.nfclocations.R;
+import in.nfclocations.Utilities.Constants;
 import in.nfclocations.Utilities.Utility;
-import okhttp3.internal.Util;
 
 public class MainActivity extends AppCompatActivity implements MessageReceived{
 
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MessageReceived{
     private RecyclerView messagesRecyclerView;
     private EditText messageEditText;
     private ImageButton sendMessageButton;
+    private ImageButton sendImageButton;
     private ChatAdapter chatAdapter;
     private LinearLayoutManager linearLayoutManager;
     private DbHelper dbHelper;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MessageReceived{
         messagesRecyclerView = (RecyclerView) findViewById(R.id.chatMessagesRecyclerView);
         messageEditText = (EditText) findViewById(R.id.messageEditText);
         sendMessageButton = (ImageButton) findViewById(R.id.sendMessageButton);
+        sendImageButton = (ImageButton) findViewById(R.id.sendImageButton);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
@@ -71,23 +77,22 @@ public class MainActivity extends AppCompatActivity implements MessageReceived{
 
                 if (message.length()!=0 && message.startsWith("#")){
 
-                    if (message.length()==4){
-                        chatAdapter.addMessage(new ChatMessage(message, Utility.getCurrentTime(), Constants.IS_SENDED,Constants.TYPE_MESSAGE_TEXT));
-                        dbHelper.addMessageToDb(new ChatMessage(message,Utility.getCurrentTime(),Constants.IS_SENDED,Constants.TYPE_MESSAGE_TEXT));
-                        sendMessage.sendMessageToBot(message , MainActivity.this);
-                    }
-                    else if (message.length()==3) {
-                        chatAdapter.addMessage(new ChatMessage(message, Utility.getCurrentTime(), Constants.IS_SENDED, Constants.TYPE_MESSAGE_IMAGE));
-                        dbHelper.addMessageToDb(new ChatMessage(message, Utility.getCurrentTime(), Constants.IS_SENDED, Constants.TYPE_MESSAGE_IMAGE));
-                        sendMessage.sendMessageToBot(message, MainActivity.this);
-                    }
+                    chatAdapter.addMessage(new ChatMessage(message, Utility.getCurrentTime(), Constants.IS_SENDED,Constants.TYPE_MESSAGE_TEXT));
+                    dbHelper.addMessageToDb(new ChatMessage(message,Utility.getCurrentTime(),Constants.IS_SENDED,Constants.TYPE_MESSAGE_TEXT));
+                    sendMessage.sendMessageToBot(message , MainActivity.this);
 
-                    else{
-                        chatAdapter.addMessage(new ChatMessage(message,Utility.getCurrentTime(), Constants.IS_SENDED,Constants.TYPE_MESSAGE_VIDEO));
-                        dbHelper.addMessageToDb(new ChatMessage(message,Utility.getCurrentTime(),Constants.IS_SENDED,Constants.TYPE_MESSAGE_VIDEO));
-                        sendMessage.sendMessageToBot(message , MainActivity.this);
-                    }
                 }
+            }
+        });
+
+        sendImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent imageIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                imageIntent.setType("image/*");
+                startActivityForResult(Intent.createChooser(imageIntent,"Select Image To Send"),Constants.RQ_GALLERY_IMAGE);
+
             }
         });
 
@@ -102,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements MessageReceived{
                 chatAdapter.addMessage(message);
             }
         });
-
         dbHelper.addMessageToDb(message);
     }
 
@@ -125,5 +129,28 @@ public class MainActivity extends AppCompatActivity implements MessageReceived{
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == Constants.RQ_GALLERY_IMAGE && resultCode == RESULT_OK  && data.getData()!=null){
+
+            Uri imageUri = data.getData();
+
+            try {
+                Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                chatAdapter.addMessage(new ChatMessage(imageUri.toString(),Utility.getCurrentTime(),Constants.IS_SENDED,Constants.TYPE_MESSAGE_IMAGE));
+                dbHelper.addMessageToDb(new ChatMessage(imageUri.toString(),Utility.getCurrentTime(),Constants.IS_SENDED,Constants.TYPE_MESSAGE_IMAGE));
+                sendMessage.sendImageToBot(Utility.generateBase64String(image),MainActivity.this);
+
+                //Now we have to send the image to the servers for identification and get a response
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
+
+        }
     }
 }

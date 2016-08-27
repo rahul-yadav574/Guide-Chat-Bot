@@ -42,26 +42,35 @@
             android:paddingRight="2dp"
             android:orientation="horizontal">
 
-            <EditText
+            <ImageButton
+                android:contentDescription="@string/send_image"
+                android:id="@+id/sendImageButton"
+                android:layout_width="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="8dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:background="@android:drawable/ic_menu_gallery" />
 
+            <EditText
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:id="@+id/messageEditText"
-                android:layout_width="252dp"
+                android:layout_width="0dp"
                 android:hint="@string/type_message"
                 android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/sendMessageButton"
-                android:layout_weight="0.72"
+                android:layout_weight="0.7"
                 android:ems="10"
                 android:maxHeight="80dp" />
 
             <ImageButton
+                android:contentDescription="@string/send_message"
                 android:id="@+id/sendMessageButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.15"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
                 android:background="@drawable/send_button" />
         </LinearLayout>
 
@@ -71,7 +80,7 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:visibility="visible"

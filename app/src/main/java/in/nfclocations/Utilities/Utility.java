@@ -1,23 +1,16 @@
 package in.nfclocations.Utilities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,7 +20,6 @@ import java.util.Date;
 public class Utility {
 
     private static final String TAG = "Utility";
-
 
     @Nullable
     public static Boolean checkNFCStatus(Context context){
@@ -66,5 +58,12 @@ public class Utility {
     public static String getIframeUrl(String videoUrl){
 
         return "<html><body><iframe width=\"280\" height=\"280\" src="+ videoUrl +" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+    }
+
+    public static String generateBase64String(Bitmap bitmap){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,byteArrayOutputStream);
+        byte [] bytes = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(bytes,Base64.DEFAULT);
     }
 }
